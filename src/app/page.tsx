@@ -9,15 +9,20 @@ export default async function Home() {
         <h1 className="text-4xl font-bold">GitHub Users</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {users.map((user) => (
-            <div key={user.id} className="flex flex-col items-center">
+            <div
+              key={user.id}
+              className="relative w-[200px] h-[200px] flex items-end overflow-hidden"
+            >
               <Image
                 src={user.avatar_url}
                 alt={user.login}
-                width={100}
-                height={100}
-                className="rounded-full"
+                width={200}
+                height={200}
+                className="hexagon"
               />
-              <p className="mt-2 text-lg">{user.login}</p>
+              <p className="absolute bottom-0 left-0 w-full max-w-[120px] px-2 text-center text-white text-base m-0 ms-10 bg-black bg-opacity-60 truncate whitespace-nowrap pointer-events-none">
+                {user.login}
+              </p>
             </div>
           ))}
         </div>
