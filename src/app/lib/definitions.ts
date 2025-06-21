@@ -19,3 +19,8 @@ export interface User {
   user_view_type: string;
   site_admin: boolean;
 }
+
+export interface UsersData {
+  users: User[];
+  nextUrl?: string;
+}
