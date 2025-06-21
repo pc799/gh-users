@@ -22,5 +22,5 @@ export interface User {
 
 export interface UsersData {
   users: User[];
-  nextUrl?: string;
+  nextUserId?: string;
 }
