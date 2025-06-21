@@ -22,18 +22,17 @@ export default function Grid({ usersData }: GridProps) {
     nextUserId = usersData.nextUserId;
   };
 
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      if (entry.isIntersecting) {
-        fetchMoreUsers().catch((error) => {
-          console.error("Failed to fetch more users:", error);
-        });
-      }
-    },
-    { threshold: 1 },
-  );
-
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          fetchMoreUsers().catch((error) => {
+            console.error("Failed to fetch more users:", error);
+          });
+        }
+      },
+      { threshold: 1 },
+    );
     if (sentinelRef.current) {
       observer.observe(sentinelRef.current);
     }

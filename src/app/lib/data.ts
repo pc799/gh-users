@@ -17,10 +17,13 @@ export async function fetchUsersData(since: string): Promise<UsersData> {
   );
 
   if (!res.ok) {
-    throw new Error("Failed to fetch users");
+    console.error("Failed to fetch users:", res.status, res.statusText);
+    return {
+      users: [],
+    };
   }
 
-  const users: User[] = await res.json();
+  const users: User[] = getUsers(await res.json());
   const nextUserId = getNextUserId(res.headers.get("link"));
 
   return {
@@ -29,12 +32,33 @@ export async function fetchUsersData(since: string): Promise<UsersData> {
   };
 }
 
-function getNextUserId(linkHeader: string | null): string | undefined {
-  if (linkHeader && linkHeader.includes(`rel=\"next\"`)) {
-    const nextUrl = linkHeader.match(nextPattern)?.[0];
-    if (nextUrl) {
-      const url = new URL(nextUrl);
-      return url.searchParams.get("since") ?? undefined;
-    }
+function getUsers(data: unknown): User[] {
+  if (!Array.isArray(data)) {
+    console.error("Invalid data format:", data);
+    return [];
   }
+  return data
+    .map((item) => {
+      if (typeof item !== "object" || item === null) {
+        console.error("Invalid user item:", item);
+        return null;
+      }
+      if ((item as any).type !== "User") {
+        return null;
+      }
+      return item as User;
+    })
+    .filter((user): user is User => user !== null);
+}
+
+function getNextUserId(linkHeader: string | null): string | undefined {
+  if (!linkHeader || !linkHeader.includes(`rel="next"`)) {
+    return undefined;
+  }
+  const nextUrl = linkHeader.match(nextPattern)?.[0];
+  if (!nextUrl) {
+    return undefined;
+  }
+  const url = new URL(nextUrl);
+  return url.searchParams.get("since") ?? undefined;
 }
