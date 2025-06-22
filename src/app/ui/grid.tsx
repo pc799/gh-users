@@ -1,10 +1,10 @@
 "use client";
 
-import clsx from "clsx";
 import { UsersData } from "@/app/lib/definitions";
 import Avatar from "@/app/ui/avatar";
-import { use, useEffect, useRef, useState } from "react";
+import { use, useRef, useState } from "react";
 import { fetchUsersData } from "@/app/lib/data";
+import { useIntersectionObserver } from "@/app/hooks/useIntersectionObserver";
 
 interface GridProps {
   usersData: Promise<UsersData>;
@@ -15,27 +15,14 @@ export default function Grid({ usersData }: GridProps) {
   const sentinelRef = useRef(null);
   const [users, setUsers] = useState(initUsers);
 
-  const fetchMoreUsers = async () => {
+  const fetchMoreUsersCallback = async () => {
     if (!nextUserId) return;
     const usersData = await fetchUsersData(nextUserId);
     setUsers((prevUsers) => [...prevUsers, ...usersData.users]);
     nextUserId = usersData.nextUserId;
   };
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          fetchMoreUsers();
-        }
-      },
-      { threshold: 1 },
-    );
-    if (sentinelRef.current) {
-      observer.observe(sentinelRef.current);
-    }
-    return () => observer.disconnect();
-  }, []);
+  useIntersectionObserver(sentinelRef, fetchMoreUsersCallback);
 
   return (
     <div>
@@ -46,9 +33,7 @@ export default function Grid({ usersData }: GridProps) {
           return (
             <div
               key={user.id}
-              className={clsx("-mb-[100px]", {
-                "translate-x-[160px]": isOddRow,
-              })}
+              className={`-mb-[100px] ${isOddRow ? "translate-x-[160px]" : ""}`}
             >
               <Avatar user={user} scale={1} />
             </div>
