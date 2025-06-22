@@ -26,9 +26,7 @@ export default function Grid({ usersData }: GridProps) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          fetchMoreUsers().catch((error) => {
-            console.error("Failed to fetch more users:", error);
-          });
+          fetchMoreUsers();
         }
       },
       { threshold: 1 },

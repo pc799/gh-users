@@ -18,7 +18,7 @@ export async function fetchUsersData(since: string): Promise<UsersData> {
   );
 
   if (!res.ok) {
-    console.error("Failed to fetch users:", res.status, res.statusText);
+    console.error("Failed to fetch:", res.status, res.statusText);
     return {
       users: [],
     };
@@ -45,7 +45,7 @@ export async function fetchUserData(
   });
 
   if (!res.ok) {
-    console.error("Failed to fetch user:", res.status, res.statusText);
+    console.error("Failed to fetch:", res.status, res.statusText);
     return null;
   }
 
@@ -61,11 +61,10 @@ function getUsers(data: unknown): User[] {
   return data
     .map((item) => {
       if (typeof item !== "object" || item === null) {
-        console.error("Invalid user item:", item);
+        console.error("Invalid data format:", item);
         return null;
       }
       if ((item as any).type !== "User") {
-        console.error("User item is not of type User:", item);
         return null;
       }
       return item as User;
@@ -87,11 +86,10 @@ function getNextUserId(linkHeader: string | null): string | undefined {
 
 function getUser(data: unknown): UserData | null {
   if (typeof data !== "object" || data === null) {
-    console.error("Invalid user data:", data);
+    console.error("Invalid data format:", data);
     return null;
   }
   if ((data as any).type !== "User") {
-    console.error("User data is not of type User:", data);
     return null;
   }
   return data as UserData;
