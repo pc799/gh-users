@@ -1,0 +1,24 @@
+import Image from "next/image";
+import { User } from "@/app/lib/definitions";
+
+interface CardProps {
+  icon?: string;
+  details: string;
+}
+
+export default function Card({ icon, details }: CardProps) {
+  return (
+    <div className="mb-3 truncate whitespace-nowrap overflow-hidden w-full">
+      {icon && (
+        <Image
+          src={icon}
+          alt={icon}
+          width={0}
+          height={0}
+          className="size-6 me-2 inline-block align-text-bottom"
+        />
+      )}
+      <span title={details}>{details ?? "..."}</span>
+    </div>
+  );
+}
