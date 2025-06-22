@@ -1,16 +1,17 @@
 "use server";
 
-import { UsersData, User } from "@/app/lib/definitions";
+import { UsersData, User, UserData } from "@/app/lib/definitions";
 
-const nextPattern = /(?<=<)([\S]*)(?=>; rel="Next")/i;
+const NEXT_PATTERN = /(?<=<)([\S]*)(?=>; rel="Next")/i;
+const PER_PAGE = "100";
 
 export async function fetchUsersData(since: string): Promise<UsersData> {
   const res = await fetch(
-    `${process.env.GITHUB_API}/users?per_page=100&since=${since}`,
+    `${process.env.GITHUB_API}/users?per_page=${PER_PAGE}&since=${since}`,
     {
       headers: {
         Accept: "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28",
+        "X-GitHub-Api-Version": `${process.env.GITHUB_API_VERSION}`,
       },
       cache: "force-cache",
     },
@@ -32,6 +33,26 @@ export async function fetchUsersData(since: string): Promise<UsersData> {
   };
 }
 
+export async function fetchUserData(
+  username: string,
+): Promise<UserData | null> {
+  const res = await fetch(`${process.env.GITHUB_API}/users/${username}`, {
+    headers: {
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": `${process.env.GITHUB_API_VERSION}`,
+    },
+    cache: "force-cache",
+  });
+
+  if (!res.ok) {
+    console.error("Failed to fetch user:", res.status, res.statusText);
+    return null;
+  }
+
+  const user = getUser(await res.json());
+  return user;
+}
+
 function getUsers(data: unknown): User[] {
   if (!Array.isArray(data)) {
     console.error("Invalid data format:", data);
@@ -44,6 +65,7 @@ function getUsers(data: unknown): User[] {
         return null;
       }
       if ((item as any).type !== "User") {
+        console.error("User item is not of type User:", item);
         return null;
       }
       return item as User;
@@ -55,10 +77,22 @@ function getNextUserId(linkHeader: string | null): string | undefined {
   if (!linkHeader || !linkHeader.includes(`rel="next"`)) {
     return undefined;
   }
-  const nextUrl = linkHeader.match(nextPattern)?.[0];
+  const nextUrl = linkHeader.match(NEXT_PATTERN)?.[0];
   if (!nextUrl) {
     return undefined;
   }
   const url = new URL(nextUrl);
   return url.searchParams.get("since") ?? undefined;
+}
+
+function getUser(data: unknown): UserData | null {
+  if (typeof data !== "object" || data === null) {
+    console.error("Invalid user data:", data);
+    return null;
+  }
+  if ((data as any).type !== "User") {
+    console.error("User data is not of type User:", data);
+    return null;
+  }
+  return data as UserData;
 }

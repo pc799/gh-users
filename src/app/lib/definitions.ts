@@ -20,6 +20,23 @@ export interface User {
   site_admin: boolean;
 }
 
+export interface UserData extends User {
+  name: string;
+  company: string;
+  blog: string;
+  location: string;
+  email: null;
+  hireable: boolean;
+  bio: string;
+  twitter_username: string;
+  public_repos: number;
+  public_gists: number;
+  followers: number;
+  following: number;
+  created_at: Date;
+  updated_at: Date;
+}
+
 export interface UsersData {
   users: User[];
   nextUserId?: string;
