@@ -16,7 +16,7 @@ export default function Avatar({ user, scale }: AvatarProps) {
   return (
     <Link
       href={`/${user.login}`}
-      className={`hexagon relative w-[${size}px] h-[${size}px] flex items-end overflow-hidden`}
+      className={`hexagon relative w-[${size}px] h-[${size}px] flex items-end overflow-hidden hover:scale-110 transition-transform duration-300 ease-out`}
     >
       <Image
         src={user.avatar_url}

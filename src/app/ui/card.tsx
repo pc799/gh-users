@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { User } from "@/app/lib/definitions";
 
 interface CardProps {
   icon?: string;
