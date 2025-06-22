@@ -3,10 +3,12 @@ import { User } from "@/app/lib/definitions";
 
 interface AvatarProps {
   user: User;
-  size: number;
+  scale: number;
 }
 
-export default function Avatar({ user, size }: AvatarProps) {
+export default function Avatar({ user, scale }: AvatarProps) {
+  const size = 200 * scale;
+
   return (
     <div
       className={`relative w-[${size}px] h-[${size}px] flex items-end overflow-hidden`}
@@ -19,7 +21,7 @@ export default function Avatar({ user, size }: AvatarProps) {
         className="hexagon"
       />
       <p
-        className={`absolute bottom-0 left-0 w-full max-w-[${size * 0.6}px] px-2 text-center text-white text-base m-0 ms-${size * 0.05} bg-black bg-opacity-60 truncate whitespace-nowrap pointer-events-none`}
+        className={`absolute bottom-0 left-0 w-full max-w-[${size / 2}px] p-0 text-center m-0 ms-[${size / 4}px] bg-black/30 backdrop-blur-xs truncate whitespace-nowrap`}
       >
         {user.login}
       </p>

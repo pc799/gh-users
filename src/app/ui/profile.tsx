@@ -17,7 +17,7 @@ export default function Profile({ userData }: ProfileProps) {
   return (
     <div>
       <div className="flex justify-center w-full">
-        <Avatar user={user} size={400} />
+        <Avatar user={user} scale={2} />
       </div>
 
       <div className="mt-3 text-center">

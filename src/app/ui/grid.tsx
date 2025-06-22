@@ -50,7 +50,7 @@ export default function Grid({ usersData }: GridProps) {
                 "translate-x-[160px]": isOddRow,
               })}
             >
-              <Avatar user={user} size={200} />
+              <Avatar user={user} scale={1} />
             </div>
           );
         })}
