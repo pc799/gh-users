@@ -1,12 +1,12 @@
 import Image from "next/image";
 import { User } from "@/app/lib/definitions";
 
-interface ProfileProps {
+interface AvatarProps {
   user: User;
   size: number;
 }
 
-export default function Profile({ user, size }: ProfileProps) {
+export default function Avatar({ user, size }: AvatarProps) {
   return (
     <div
       className={`relative w-[${size}px] h-[${size}px] flex items-end overflow-hidden`}

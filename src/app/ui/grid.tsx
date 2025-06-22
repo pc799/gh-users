@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { UsersData } from "@/app/lib/definitions";
-import Profile from "@/app/ui/profile";
+import Avatar from "@/app/ui/avatar";
 import { use, useEffect, useRef, useState } from "react";
 import { fetchUsersData } from "@/app/lib/data";
 
@@ -52,7 +52,7 @@ export default function Grid({ usersData }: GridProps) {
                 "translate-x-[160px]": isOddRow,
               })}
             >
-              <Profile user={user} />
+              <Avatar user={user} size={200} />
             </div>
           );
         })}

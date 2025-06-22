@@ -1,6 +1,6 @@
 import { fetchUserData } from "@/app/lib/data";
 import { Suspense } from "react";
-import Profile from "@/app/ui/profile";
+import Avatar from "@/app/ui/avatar";
 import Card from "@/app/ui/card";
 
 export default async function Page({
@@ -22,7 +22,7 @@ export default async function Page({
         <div className="w-full max-w-md">
           <Suspense fallback={<div>Loading...</div>}>
             <div className="flex justify-center w-full">
-              <Profile user={userData} size={400} />
+              <Avatar user={userData} size={400} />
             </div>
 
             <div className="mt-3 text-center">
