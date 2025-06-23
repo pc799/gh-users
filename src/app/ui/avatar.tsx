@@ -34,7 +34,7 @@ export default function Avatar({ user, scale }: AvatarProps) {
         height={size}
       />
       <p
-        className={`absolute bottom-0 left-0 w-full ${maxWidth[scale]} p-0 ${paddingBottom[scale]} m-0 ${marginStart[scale]} bg-black/30 backdrop-blur-xs truncate whitespace-nowrap rounded-t-xl font-bold text-center`}
+        className={`absolute bottom-0 left-0 w-full ${maxWidth[scale]} p-0 ${paddingBottom[scale]} m-0 ${marginStart[scale]} bg-black/50 backdrop-blur-3xl truncate whitespace-nowrap rounded-t-xl font-bold text-center`}
       >
         {user.login}
       </p>
