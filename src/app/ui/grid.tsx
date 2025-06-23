@@ -15,7 +15,7 @@ export default function Grid({ usersData }: GridProps) {
   const initUsers = use(usersData);
   const [cols, setCols] = useState(1);
   const [users, setUsers] = useState(initUsers.users);
-  let nextUserId = initUsers.nextUserId;
+  const nextUserIdRef = useRef(initUsers.nextUserId);
   const gridRef = useRef(null);
   const sentinelRef = useRef(null);
 
@@ -29,11 +29,11 @@ export default function Grid({ usersData }: GridProps) {
   useResizeObserver(gridRef, updateCols);
 
   const updateUsers = useCallback(async () => {
-    if (!nextUserId) return;
-    const usersData = await fetchUsersData(nextUserId);
+    if (!nextUserIdRef.current) return;
+    const usersData = await fetchUsersData(nextUserIdRef.current);
     setUsers((prevUsers) => [...prevUsers, ...usersData.users]);
-    nextUserId = usersData.nextUserId;
-  }, [nextUserId]);
+    nextUserIdRef.current = usersData.nextUserId;
+  }, []);
   useIntersectionObserver(sentinelRef, updateUsers);
 
   return (
