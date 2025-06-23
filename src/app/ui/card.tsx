@@ -7,7 +7,7 @@ interface CardProps {
 
 export default function Card({ icon, details }: CardProps) {
   return (
-    <div className="mb-3 truncate whitespace-nowrap overflow-hidden w-full">
+    <div className="mb-3 overflow-hidden w-full break-words">
       {icon && (
         <Image
           src={icon}
