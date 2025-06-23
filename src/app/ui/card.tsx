@@ -6,6 +6,10 @@ interface CardProps {
 }
 
 export default function Card({ icon, details }: CardProps) {
+  if (!details) {
+    return null;
+  }
+
   return (
     <div className="mb-3 overflow-hidden w-full break-words">
       {icon && (
@@ -17,7 +21,7 @@ export default function Card({ icon, details }: CardProps) {
           className="size-6 me-2 inline-block align-text-bottom"
         />
       )}
-      <span title={details}>{details ?? "..."}</span>
+      <span title={details}>{details}</span>
     </div>
   );
 }
