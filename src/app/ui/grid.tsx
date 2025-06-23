@@ -2,9 +2,10 @@
 
 import { UsersData } from "@/app/lib/definitions";
 import Avatar from "@/app/ui/avatar";
-import { use, useRef, useState } from "react";
+import { useCallback, useRef, useState, use } from "react";
 import { fetchUsersData } from "@/app/lib/data";
 import { useIntersectionObserver } from "@/app/hooks/useIntersectionObserver";
+import { useResizeObserver } from "@/app/hooks/useResizeObserver";
 
 interface GridProps {
   usersData: Promise<UsersData>;
@@ -12,25 +13,37 @@ interface GridProps {
 
 export default function Grid({ usersData }: GridProps) {
   const initUsers = use(usersData);
-  const sentinelRef = useRef(null);
+  const [cols, setCols] = useState(1);
   const [users, setUsers] = useState(initUsers.users);
   let nextUserId = initUsers.nextUserId;
+  const gridRef = useRef(null);
+  const sentinelRef = useRef(null);
 
-  const fetchMoreUsersCallback = async () => {
+  const updateCols = useCallback((element: Element) => {
+    const style = window.getComputedStyle(element);
+    const colCount = style
+      .getPropertyValue("grid-template-columns")
+      .split(" ").length;
+    setCols(colCount);
+  }, []);
+  useResizeObserver(gridRef, updateCols);
+
+  const updateUsers = useCallback(async () => {
     if (!nextUserId) return;
     const usersData = await fetchUsersData(nextUserId);
     setUsers((prevUsers) => [...prevUsers, ...usersData.users]);
     nextUserId = usersData.nextUserId;
-  };
-
-  useIntersectionObserver(sentinelRef, fetchMoreUsersCallback);
+  }, [nextUserId]);
+  useIntersectionObserver(sentinelRef, updateUsers);
 
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-30 gap-y-0 ms-[-160px]">
+      <div
+        ref={gridRef}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-30 gap-y-0 ms-[-160px]"
+      >
         {users.map((user, i) => {
-          // TODO: responsive
-          const isOddRow = Math.floor(i / 3) % 2 === 1;
+          const isOddRow = Math.floor(i / cols) % 2 === 1;
           return (
             <div
               key={user.id}
@@ -41,7 +54,6 @@ export default function Grid({ usersData }: GridProps) {
           );
         })}
       </div>
-
       <div ref={sentinelRef}></div>
     </div>
   );
