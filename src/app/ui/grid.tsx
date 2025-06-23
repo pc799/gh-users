@@ -11,9 +11,10 @@ interface GridProps {
 }
 
 export default function Grid({ usersData }: GridProps) {
-  let { users: initUsers, nextUserId } = use(usersData);
+  const initUsers = use(usersData);
   const sentinelRef = useRef(null);
-  const [users, setUsers] = useState(initUsers);
+  const [users, setUsers] = useState(initUsers.users);
+  let nextUserId = initUsers.nextUserId;
 
   const fetchMoreUsersCallback = async () => {
     if (!nextUserId) return;

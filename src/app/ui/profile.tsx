@@ -8,7 +8,7 @@ interface ProfileProps {
 }
 
 export default function Profile({ userData }: ProfileProps) {
-  let user = use(userData);
+  const user = use(userData);
 
   if (!user) {
     return <div>User not found!</div>;

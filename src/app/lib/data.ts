@@ -64,7 +64,7 @@ function getUsers(data: unknown): User[] {
         console.error("Invalid data format:", item);
         return null;
       }
-      if ((item as any).type !== "User") {
+      if ((item as { type: string }).type !== "User") {
         return null;
       }
       return item as User;
@@ -89,7 +89,7 @@ function getUser(data: unknown): UserData | null {
     console.error("Invalid data format:", data);
     return null;
   }
-  if ((data as any).type !== "User") {
+  if ((data as { type: string }).type !== "User") {
     return null;
   }
   return data as UserData;
